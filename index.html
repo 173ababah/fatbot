@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>肥鱼 · 一只住在 QQ 里的鲸鱼娘</title>
+<meta name="description" content="肥鱼是一个会聊天、会说话、有一点小脾气的 QQ 虚拟少女。了解她能做什么、怎么说话，以及背后是怎么搭起来的。">
+<meta name="theme-color" content="#0b0d12">
+<meta property="og:title" content="肥鱼 · 一只住在 QQ 里的鲸鱼娘">
+<meta property="og:description" content="会聊天、会有情绪、会撒娇，也会记仇。">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="alternate icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐳</text></svg>">
+<style>
+  :root{
+    --bg:#0b0d12; --bg2:#0f1219; --card:#151a23; --card2:#1b212c;
+    --line:#232a36; --txt:#eef1f7; --sub:#98a2b3; --dim:#6b7484;
+    --acc:#4c8dff; --acc2:#36d6c0; --warn:#ff9a4d; --pink:#ff7ab6;
+    --r:18px;
+  }
+  *{box-sizing:border-box;min-width:0}
+  html,body{max-width:100%;overflow-x:hidden}
+  img,svg{max-width:100%;height:auto}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--txt);
+    font-family:"PingFang SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",sans-serif;
+    line-height:1.75; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* ---------- 顶部导航 ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+    background:rgba(11,13,18,.72);border-bottom:1px solid rgba(35,42,54,.7);
+  }
+  nav .wrap{display:flex;align-items:center;gap:28px;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+  .brand .dot{
+    width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:16px;
+    background:linear-gradient(135deg,#2b4f8f,#182238);border:1px solid #2c3a52;
+  }
+  .navlinks{display:flex;gap:22px;margin-left:auto;font-size:14px;color:var(--sub)}
+  .navlinks a:hover{color:var(--txt)}
+  @media(max-width:760px){.navlinks{display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;padding:86px 0 60px;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;pointer-events:none}
+  .b1{width:520px;height:520px;background:#1b3f7a;top:-220px;right:-140px}
+  .b2{width:420px;height:420px;background:#0f5a55;bottom:-240px;left:-160px;opacity:.35}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;position:relative}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:#9fc0ff;background:rgba(76,141,255,.12);
+    border:1px solid rgba(76,141,255,.3);padding:7px 14px;border-radius:999px;font-weight:700;
+  }
+  h1{font-size:64px;line-height:1.08;margin:22px 0 6px;letter-spacing:-1.5px}
+  h1 .en{display:block;font-size:15px;letter-spacing:.34em;color:var(--dim);font-weight:600;margin-bottom:14px}
+  .lead{font-size:19px;color:#b9c3d4;max-width:33em}
+  .lead b{color:#fff;font-weight:700}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .tag{
+    font-size:12.5px;color:#c8d2e2;background:var(--card);border:1px solid var(--line);
+    padding:7px 13px;border-radius:999px;
+  }
+
+  /* ---------- 聊天卡片 ---------- */
+  .phone{
+    background:linear-gradient(180deg,#141a24,#0e1218);
+    border:1px solid #222a37;border-radius:26px;padding:16px;
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .phone-bar{display:flex;align-items:center;gap:10px;padding:4px 6px 14px;border-bottom:1px solid #1d232e}
+  .ava{
+    width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2f6fe0,#173a80);
+    display:grid;place-items:center;font-size:17px;flex:0 0 auto;
+  }
+  .phone-bar .name{font-weight:700;font-size:14px}
+  .phone-bar .status{font-size:11.5px;color:var(--acc2);display:flex;align-items:center;gap:5px}
+  .phone-bar .status i{width:6px;height:6px;border-radius:50%;background:var(--acc2);display:inline-block}
+  .chat{padding:16px 4px 6px;display:flex;flex-direction:column;gap:12px;min-height:330px}
+  .msg{max-width:82%;padding:10px 14px;border-radius:16px;font-size:13.5px;line-height:1.6;
+       animation:pop .5s cubic-bezier(.2,.9,.3,1.2) both}
+  .in{align-self:flex-start;background:#1d2431;border:1px solid #262f3e;border-bottom-left-radius:6px;color:#e3e8f2}
+  .out{align-self:flex-end;background:linear-gradient(135deg,#3d7bf0,#2b5fd0);border-bottom-right-radius:6px;color:#fff;
+       box-shadow:0 10px 24px -12px rgba(61,123,240,.9)}
+  .who{font-size:11px;color:var(--dim);margin-bottom:-6px;margin-left:6px}
+  .time{align-self:center;font-size:11px;color:var(--dim);margin:2px 0}
+  .typing{align-self:flex-start;display:flex;gap:5px;padding:12px 14px;background:#1d2431;border-radius:16px}
+  .typing i{width:6px;height:6px;border-radius:50%;background:#5a6474;animation:blink 1.2s infinite}
+  .typing i:nth-child(2){animation-delay:.2s}
+  .typing i:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+
+  /* ---------- 通用区块 ---------- */
+  section{padding:78px 0;position:relative}
+  .eyebrow{font-size:12px;letter-spacing:.26em;color:var(--dim);font-weight:700;text-transform:uppercase}
+  h2{font-size:36px;margin:10px 0 8px;letter-spacing:-.6px}
+  .sub{color:var(--sub);font-size:16px;max-width:44em}
+  .hr{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin:0}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
+  @media(max-width:900px){.cards{grid-template-columns:1fr}}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 24px;
+    transition:.28s;position:relative;overflow:hidden;
+  }
+  .card:hover{transform:translateY(-4px);border-color:#2e3a4d;background:var(--card2)}
+  .card .ico{font-size:24px;margin-bottom:14px;display:block}
+  .card h3{margin:0 0 8px;font-size:17px}
+  .card p{margin:0;color:var(--sub);font-size:14px}
+  .card .bar{position:absolute;left:0;top:0;height:3px;width:100%;opacity:.85}
+
+  /* ---------- 对话示例 ---------- */
+  .ex{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:34px}
+  @media(max-width:820px){.ex{grid-template-columns:1fr}}
+  .ex .box{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+  .ex .box .t{font-size:12.5px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-weight:700}
+  .line{display:flex;gap:10px;margin:9px 0;font-size:14px}
+  .line .k{color:var(--dim);flex:0 0 52px;font-size:12.5px;padding-top:2px}
+  .line .v{color:#dfe5ef}
+  .line.fish .v{color:#9fc0ff}
+
+  /* ---------- 语音链路 ---------- */
+  .flow{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;align-items:center}
+  .step{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;
+    font-size:13.5px;color:#cdd6e4;white-space:nowrap;
+  }
+  .step b{color:#fff;font-weight:700}
+  .arrow{color:#3a4557;font-size:14px}
+
+  .voices{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+  @media(max-width:820px){.voices{grid-template-columns:1fr}}
+  .voice{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .voice .nm{font-weight:700;font-size:14.5px;margin-bottom:6px}
+  .voice .ds{font-size:13px;color:var(--sub)}
+  .swatch{height:6px;border-radius:999px;margin-bottom:14px;width:64px}
+
+  /* ---------- 技术 ---------- */
+  .stack{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+  @media(max-width:900px){.stack{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.stack{grid-template-columns:1fr}}
+  .st{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .st .k{font-size:11.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;font-weight:700}
+  .st .v{margin-top:6px;font-size:14.5px;color:#dfe5ef}
+
+  /* ---------- 规格表 ---------- */
+  .spec{margin-top:34px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .spec .row{display:grid;grid-template-columns:200px 1fr;gap:0;border-bottom:1px solid var(--line)}
+  .spec .row:last-child{border-bottom:0}
+  .spec .row:nth-child(odd){background:rgba(255,255,255,.015)}
+  .spec .k{padding:16px 22px;color:var(--sub);font-size:13.5px;border-right:1px solid var(--line)}
+  .spec .v{padding:16px 22px;font-size:14px;color:#e2e8f2}
+  @media(max-width:700px){.spec .row{grid-template-columns:1fr}.spec .k{border-right:0;border-bottom:1px solid var(--line);padding-bottom:6px}}
+
+  /* ---------- 页脚 ---------- */
+  footer{padding:60px 0 46px;color:var(--dim);font-size:13px;border-top:1px solid var(--line);margin-top:20px}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
+  .ghost{color:var(--sub)}
+
+  /* ---------- 移动端适配 ---------- */
+  @media(max-width:900px){
+    .wrap{padding:0 20px}
+    .lead,.sub{max-width:100%}   /* em 上限在窄屏会撑破布局 */
+    .hero-grid,.cards,.ex,.stack,.voices{max-width:100%}
+    h1{font-size:52px;letter-spacing:-1px}
+    h1 .en{letter-spacing:.22em;font-size:13px}
+    .lead{font-size:17px}
+    section{padding:64px 0}
+  }
+  @media(max-width:900px){
+    .hero-grid,.ex,.cards,.voices,.stack{display:block}
+    .hero-grid>*+*{margin-top:34px}
+    .cards>.card,.ex>.box,.voices>.voice,.stack>.st{margin-bottom:14px}
+    .phone{max-width:100%}
+    .msg{max-width:100%}
+    .flow{display:block}
+    .flow .step{display:inline-block;margin:4px 6px 4px 0}
+    .flow .arrow{display:none}
+    .spec .row{display:block}
+    .spec .k{border-right:0;border-bottom:0;padding-bottom:2px}
+    .spec .v{padding-top:2px}
+  }
+
+  @media(max-width:560px){
+    .wrap{padding:0 16px}
+    .hero{padding:52px 0 36px}
+    h1{font-size:38px;letter-spacing:-.5px;margin:16px 0 4px}
+    h1 .en{letter-spacing:.14em;font-size:10.5px;margin-bottom:10px}
+    .lead{font-size:15.5px;line-height:1.8}
+    .pill{font-size:10.5px;padding:6px 11px;letter-spacing:.08em}
+    .tag{font-size:11.5px;padding:6px 10px}
+    h2{font-size:25px;letter-spacing:-.2px}
+    .sub{font-size:14.5px}
+    section{padding:52px 0}
+    .eyebrow{font-size:10.5px;letter-spacing:.2em}
+    .cards{margin-top:26px;gap:12px}
+    .card{padding:20px 18px}
+    .card h3{font-size:15.5px}
+    .card p{font-size:13px}
+    .step{white-space:normal;font-size:12.5px;padding:10px 13px}
+    .flow{gap:8px}
+    .arrow{font-size:12px}
+    .phone{padding:12px;border-radius:20px}
+    .chat{min-height:280px;gap:10px;padding:12px 2px 4px}
+    .msg{font-size:12.8px;padding:9px 12px;max-width:88%}
+    .ex{gap:12px}
+    .ex .box{padding:18px 16px}
+    .line{font-size:13px}
+    .line .k{flex:0 0 40px;font-size:11.5px}
+    .spec .row{grid-template-columns:1fr}
+    .spec .k{padding:14px 18px 4px;border-right:0;border-bottom:0}
+    .spec .v{padding:4px 18px 16px;font-size:13.5px}
+    .st{padding:15px 16px}
+    .st .v{font-size:13.5px}
+    footer{padding:40px 0 34px;font-size:12px}
+  }
+  @media(max-width:380px){
+    h1{font-size:32px}
+    h1 .en{letter-spacing:.1em;font-size:9.5px}
+  }
+
+  /* ---------- 滚动出现 ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+  .reveal.on{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    .msg,.typing i{animation:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot">🐳</span>肥鱼</div>
+    <div class="navlinks">
+      <a href="#about">她是谁</a>
+      <a href="#do">会什么</a>
+      <a href="#talk">怎么说话</a>
+      <a href="#voice">声音</a>
+      <a href="#tech">怎么做的</a>
+      <a href="#meet">找到她</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="wrap hero-grid">
+    <div class="reveal">
+      <span class="pill">QQ · 虚拟少女 · AI</span>
+      <h1><span class="en">A WHALE GIRL IN YOUR CHAT</span>肥鱼</h1>
+      <p class="lead">
+        一只住在 QQ 里的鲸鱼娘。会聊天、会撒娇、会闹脾气，
+        也有自己的<strong>声音</strong>、<strong>记忆</strong>和<strong>小脾气</strong>。
+      </p>
+      <div class="meta">
+        <span class="tag">会说话（真人音色）</span>
+        <span class="tag">有情绪和好感度</span>
+        <span class="tag">记得你是谁</span>
+        <span class="tag">会搜图 / 查资料</span>
+      </div>
+    </div>
+
+    <div class="phone reveal">
+      <div class="phone-bar">
+        <div class="ava">🐳</div>
+        <div>
+          <div class="name">肥鱼</div>
+          <div class="status"><i></i>在线 · 正在发呆</div>
+        </div>
+      </div>
+      <div class="chat" id="chat">
+        <div class="time">今天 21:07</div>
+        <div class="who">你</div>
+        <div class="msg in">在吗</div>
+        <div class="msg out">在的在的！刚刚在打盹…被你叫醒了。</div>
+        <div class="msg in">你今天怎么这么安静</div>
+        <div class="msg out">哼，我一直都很安静好不好。<br>…才不是因为你没找我。</div>
+        <div class="typing"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="hr"></div>
+
+<section id="about">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">Who is she</div>
+      <h2>她不是客服，是一只真的会闹脾气的鱼</h2>
+      <p class="sub">
+        说话口语、句子短，偶尔傲娇又容易心软。被夸会嘴硬，被凶会记仇；
+        记得你叫什么、聊过什么，也记得你上次让她不高兴了。
+      </p>
+    </div>
+
+    <div class="cards">
+      <div class="card reveal">
+        <span class="bar" style="background:linear-gradient(90deg,#4c8dff,transparent)"></span>
+        <span class="ico">💬</span>
+        <h3>像人一样聊天</h3>
+        <p>不是问答机器人。会接梗、会反问、会主动搭话，也会在你连发消息时嫌你烦。</p>
+      </div>
+      <div class="card reveal">
+        <span class="bar" style="background:linear-gradient(90deg,#36d6c0,transparent)"></span>
+        <span class="ico">🎙️</span>
+        <h3>真的会「说话」</h3>
+        <p>能发语音，音色是定制的。开心时语速变快，不高兴时语气就不太客气。</p>
+      </div>
+      <div class="card reveal">
+        <span class="bar" style="background:linear-gradient(90deg,#ff7ab6,transparent)"></span>
+        <span class="ico">💗</span>
+        <h3>有好感度</h3>
+        <p>从讨厌到黏人都有。问她「你对我好感度多少」，她会如实告诉你。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="do">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">What she can do</div>
+      <h2>不止会聊天</h2>
+      <p class="sub">看图、搜图、查资料、发表情包、记住人，这些都是基本功。</p>
+    </div>
+    <div class="cards">
+      <div class="card reveal"><span class="ico">🔍</span><h3>以图搜图</h3><p>丢张图问她「这什么番」，她会去搜出处再跟你聊。</p></div>
+      <div class="card reveal"><span class="ico">🧠</span><h3>记住你说过的话</h3><p>喜欢什么、讨厌什么、干过什么蠢事，聊过就有印象。</p></div>
+      <div class="card reveal"><span class="ico">😀</span><h3>表情包</h3><p>自己有一整套表情包，会在合适的时候甩一张出来接话。</p></div>
+      <div class="card reveal"><span class="ico">🌐</span><h3>上网查</h3><p>问到陌生的人和事，她会先去搜一下再回答，不瞎编。</p></div>
+      <div class="card reveal"><span class="ico">📄</span><h3>读链接和卡片</h3><p>B 站视频、公众号文章、小程序卡片，丢给她就能一起看。</p></div>
+      <div class="card reveal"><span class="ico">🤫</span><h3>会看场合</h3><p>有的群只在她被叫到才说话，有的群她更活跃——规则可以按群单独定。</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<section id="talk">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">How she talks</div>
+      <h2>她的小脾气</h2>
+      <p class="sub">几个真实存在的小机制——她不是无条件顺从的那种角色。</p>
+    </div>
+
+    <div class="ex">
+      <div class="box reveal">
+        <div class="t">让她闭嘴</div>
+        <div class="line"><span class="k">你说</span><span class="v">闭嘴</span></div>
+        <div class="line fish"><span class="k">她</span><span class="v">呜…那我闭嘴就是了嘛，反正我说什么都是多余的。</span></div>
+        <div class="line"><span class="k">然后</span><span class="v">接下来 3 小时她不会主动理你；你重新叫她，才恢复正常。</span></div>
+      </div>
+
+      <div class="box reveal">
+        <div class="t">口头禅复读</div>
+        <div class="line"><span class="k">你说</span><span class="v">哦鲸鲸</span></div>
+        <div class="line fish"><span class="k">她</span><span class="v">哦鲸鲸</span></div>
+        <div class="line"><span class="k">限制</span><span class="v">半小时最多跟两次，不然太吵了。</span></div>
+      </div>
+
+      <div class="box reveal">
+        <div class="t">好感度</div>
+        <div class="line"><span class="k">你说</span><span class="v">你对我好感度多少</span></div>
+        <div class="line fish"><span class="k">她</span><span class="v">唔…我对你的好感度是 32（对你印象不错）。</span></div>
+        <div class="line"><span class="k">范围</span><span class="v">-255 ~ 256。夸她可爱会涨，骂她会掉，投喂米饭也能涨。</span></div>
+      </div>
+
+      <div class="box reveal">
+        <div class="t">极端状态</div>
+        <div class="line"><span class="k">很低</span><span class="v">偶尔阴阳怪气：「哦，是吗，你说得都对呢。」</span></div>
+        <div class="line"><span class="k">很高</span><span class="v">变得黏人：「喂，你刚刚去哪了？我等你好久了。」</span></div>
+        <div class="line"><span class="k">说明</span><span class="v">只在数值接近两端时才会出现，平时正常聊天。</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<section id="voice">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">Her voice</div>
+      <h2>声音是「定制」的</h2>
+      <p class="sub">
+        用参考素材做零样本克隆，中文音色就用中文素材训练——这样念中文才不串味。
+        输出的语音会转成聊天软件原生的语音编码，听起来不像「电子音」。
+      </p>
+    </div>
+
+    <div class="flow reveal">
+      <span class="step"><b>情绪判定</b> 开心 / 不耐烦 / 撒娇</span>
+      <span class="arrow">→</span>
+      <span class="step"><b>选音色</b></span>
+      <span class="arrow">→</span>
+      <span class="step"><b>语音合成</b> 克隆音色</span>
+      <span class="arrow">→</span>
+      <span class="step"><b>响度标准化</b></span>
+      <span class="arrow">→</span>
+      <span class="step"><b>转原生语音编码</b></span>
+      <span class="arrow">→</span>
+      <span class="step"><b>发送</b></span>
+    </div>
+
+    <div class="voices">
+      <div class="voice reveal">
+        <div class="swatch" style="background:linear-gradient(90deg,#4c8dff,#7fb0ff)"></div>
+        <div class="nm">平常 / 可爱</div>
+        <div class="ds">默认音色。平静、偏软，偶尔拖尾音。</div>
+      </div>
+      <div class="voice reveal">
+        <div class="swatch" style="background:linear-gradient(90deg,#ff9a4d,#ffc78a)"></div>
+        <div class="nm">不耐烦</div>
+        <div class="ds">语速快一点，语气更冲，用来嫌弃你。</div>
+      </div>
+      <div class="voice reveal">
+        <div class="swatch" style="background:linear-gradient(90deg,#ff7ab6,#ffb3d4)"></div>
+        <div class="nm">撒娇 / 赌气</div>
+        <div class="ds">尾音上挑，带一点赌气的感觉。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<section id="tech">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">Under the hood</div>
+      <h2>她是怎么搭起来的</h2>
+      <p class="sub">一个聊天机器人框架 + 一个协议端 + 一套语音链路 + 三个控制台。</p>
+    </div>
+
+    <div class="stack">
+      <div class="st reveal"><div class="k">Bot 框架</div><div class="v">NoneBot2 · OneBot v11</div></div>
+      <div class="st reveal"><div class="k">协议端</div><div class="v">容器化 QQ 客户端</div></div>
+      <div class="st reveal"><div class="k">对话模型</div><div class="v">大语言模型（OpenAI 兼容）</div></div>
+      <div class="st reveal"><div class="k">语音合成</div><div class="v">零样本克隆 + 原生语音编码</div></div>
+      <div class="st reveal"><div class="k">控制端</div><div class="v">电脑 / 手机 / HTTP 接口</div></div>
+      <div class="st reveal"><div class="k">自愈</div><div class="v">看门狗 + 自动登录</div></div>
+    </div>
+
+    <div class="spec reveal">
+      <div class="row"><div class="k">收到一条消息</div><div class="v">判断该不该回 → 拼上下文和人设 → 交给模型 → 清洗 → 回发（可选带语音）</div></div>
+      <div class="row"><div class="k">她的记忆</div><div class="v">分两层：长期记忆（你的人和事）＋ 最近几句对话</div></div>
+      <div class="row"><div class="k">群里的分寸</div><div class="v">可以按群单独设：只在她被叫到才回、连聊几次、消息多长、发表情包的频率</div></div>
+      <div class="row"><div class="k">稳定性</div><div class="v">定时检查在线状态，掉线能自动恢复；登录失效时会尝试自动登录</div></div>
+      <div class="row"><div class="k">控制台</div><div class="v">看状态、自检、扫码、按会话看聊天记录、主动替她说句话或发条语音</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="meet">
+  <div class="wrap">
+    <div class="reveal" style="max-width:720px">
+      <div class="eyebrow">Meet her</div>
+      <h2>想跟她说句话？</h2>
+      <p class="sub">
+        她没有公开的加好友入口，也不会主动去陌生群。
+        通常是在朋友的小群里遇到她——被叫到名字，她就醒了。
+      </p>
+      <div class="meta" style="margin-top:22px">
+        <span class="tag">不公开 QQ 号</span>
+        <span class="tag">只在被邀请的群出现</span>
+        <span class="tag">不接受商业使用</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<section>
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:640px;margin:0 auto">
+      <div class="eyebrow">A note</div>
+      <h2>她不是万能的</h2>
+      <p class="sub" style="margin:0 auto">
+        会答错、会误解、会有情绪化的时候。她是一个爱好项目，不是产品；
+        想聊两句，欢迎，但别把重要的事托付给她。
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div>🐳 肥鱼 · 一个个人 AI 虚拟角色项目</div>
+      <div class="ghost" style="margin-top:6px">by 影光衫子</div>
+    </div>
+    <div class="ghost">本站不含任何账号、密钥、服务器或聊天数据</div>
+  </div>
+</footer>
+
+<script>
+  // 滚动出现
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('on'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          var el = en.target;
+          var idx = Array.prototype.indexOf.call(el.parentNode.children, el);
+          el.style.transitionDelay = Math.min(idx, 6) * 60 + 'ms';
+          el.classList.add('on');
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+
+  // 聊天气泡依次出现
+  (function () {
+    var chat = document.getElementById('chat');
+    if (!chat) return;
+    var nodes = Array.prototype.slice.call(chat.children);
+    nodes.forEach(function (n, i) { n.style.animationDelay = (i * 260) + 'ms'; });
+    // 循环：几秒后把最后一句换掉，制造「她又在说话」的感觉
+    var lines = [
+      '在的在的！刚刚在打盹…被你叫醒了。',
+      '你今天怎么这么晚才来。',
+      '晚了就别聊太久，早点睡。',
+      '……我是说，别熬太晚啦。'
+    ];
+    var k = 0;
+    setInterval(function () {
+      var outs = chat.querySelectorAll('.msg.out');
+      if (!outs.length) return;
+      var last = outs[outs.length - 1];
+      last.style.opacity = 0;
+      setTimeout(function () {
+        k = (k + 1) % lines.length;
+        last.innerHTML = lines[k];
+        last.style.opacity = 1;
+      }, 320);
+    }, 5200);
+  })();
+</script>
+</body>
+</html>
